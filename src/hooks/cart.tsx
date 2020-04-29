@@ -83,12 +83,18 @@ const CartProvider: React.FC = ({ children }) => {
   const decrement = useCallback(
     async id => {
       const productIndex = products.findIndex(p => p.id === id);
-      if (productIndex >= 0 && products[productIndex].quantity > 0) {
-        setProducts(
-          produce(products, draft => {
-            draft[productIndex].quantity -= 1;
-          }),
-        );
+      if (productIndex >= 0) {
+        products[productIndex].quantity > 1
+          ? setProducts(
+              produce(products, draft => {
+                draft[productIndex].quantity -= 1;
+              }),
+            )
+          : setProducts(
+              produce(products, draft => {
+                draft.splice(productIndex, 1);
+              }),
+            );
       }
 
       await AsyncStorage.setItem(
